@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+<p class="subtitle">Pick a section to edit. Changes go live on the site immediately.</p>
+
+<div class="card">
+  <h2>Sections</h2>
+  <div class="list-row"><div class="list-row__main"><a href="{{ url_for('admin.profile') }}"><b>Profile & Social</b> — name, role, tagline, email, GitHub, LinkedIn, resume file</a></div></div>
+  <div class="list-row"><div class="list-row__main"><a href="{{ url_for('admin.nav_list') }}"><b>Nav Links</b> — add, remove, reorder the top navigation menu</a></div></div>
+  <div class="list-row"><div class="list-row__main"><a href="{{ url_for('admin.about_list') }}"><b>About</b> — bio paragraphs and quick facts</a></div></div>
+  <div class="list-row"><div class="list-row__main"><a href="{{ url_for('admin.projects_list') }}"><b>Projects</b> — add, edit, remove, reorder work samples</a></div></div>
+  <div class="list-row"><div class="list-row__main"><a href="{{ url_for('admin.skills_list') }}"><b>Skills</b> — skill groups and levels</a></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h1>Profile & Social</h1>
+<p class="subtitle">Your name, tagline, and the links shown in the Contact section.</p>
+
+<form class="card" method="post" enctype="multipart/form-data">
+  <div class="row">
+    <div class="field">
+      <label>Name</label>
+      <input type="text" name="name" value="{{ profile.name }}" required>
+    </div>
+    <div class="field">
+      <label>Role</label>
+      <input type="text" name="role" value="{{ profile.role }}" required>
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label>Location</label>
+      <input type="text" name="location" value="{{ profile.location }}">
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" name="email" value="{{ profile.email }}" required>
+    </div>
+  </div>
+  <div class="field">
+    <label>Tagline</label>
+    <textarea name="tagline">{{ profile.tagline }}</textarea>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label>GitHub URL</label>
+      <input type="text" name="github" value="{{ profile.github }}">
+    </div>
+    <div class="field">
+      <label>LinkedIn URL</label>
+      <input type="text" name="linkedin" value="{{ profile.linkedin }}">
+    </div>
+  </div>
+  <div class="field">
+    <label>Replace resume PDF (optional)</label>
+    <input type="file" name="resume" accept="application/pdf">
+    <p class="hint">Uploading a new file replaces the one linked from the Resume section.</p>
+  </div>
+  <button class="btn" type="submit">Save changes</button>
+</form>
+{% endblock %}

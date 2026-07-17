@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h1>Nav Links</h1>
+<p class="subtitle">The links shown in the top navigation bar, in order.</p>
+
+<div class="card">
+  <h2>Current links</h2>
+  {% for link in links %}
+  <div class="list-row">
+    <div class="list-row__actions">
+      <form method="post" action="{{ url_for('admin.nav_move', link_id=link.id, direction='up') }}">
+        <button class="move-btn" type="submit" {{ 'disabled' if loop.first }}>↑</button>
+      </form>
+      <form method="post" action="{{ url_for('admin.nav_move', link_id=link.id, direction='down') }}">
+        <button class="move-btn" type="submit" {{ 'disabled' if loop.last }}>↓</button>
+      </form>
+    </div>
+    <form class="inline-edit" method="post" action="{{ url_for('admin.nav_edit', link_id=link.id) }}">
+      <input type="text" name="label" value="{{ link.label }}" required>
+      <input type="text" name="href" value="{{ link.href }}" required>
+      <button class="btn btn-outline btn-sm" type="submit">Save</button>
+    </form>
+    <div class="list-row__actions">
+      <form method="post" action="{{ url_for('admin.nav_delete', link_id=link.id) }}" onsubmit="return confirm('Remove this link?')">
+        <button class="btn-danger" type="submit">Remove</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <p class="hint">No nav links yet — add one below.</p>
+  {% endfor %}
+
+  <form class="add-form" method="post" action="{{ url_for('admin.nav_add') }}">
+    <input type="text" name="label" placeholder="Label (e.g. Blog)" required>
+    <input type="text" name="href" placeholder="Link (e.g. #blog or https://...)" required style="flex:1;">
+    <button class="btn" type="submit">+ Add link</button>
+  </form>
+</div>
+{% endblock %}

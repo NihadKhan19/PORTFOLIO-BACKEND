@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ profile.name }} — {{ profile.role }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ============================================================
+     TOP NAV
+     ============================================================ -->
+<nav class="topnav">
+  <a href="#home" class="topnav__name">{{ profile.name }}</a>
+  <div class="topnav__links" id="navLinks">
+    {% for link in nav_links %}
+    <a href="{{ link.href }}" class="{{ 'active' if loop.first else '' }}{{ ' resume-btn' if link.label|lower == 'resume' else '' }}">{{ link.label }}</a>
+    {% endfor %}
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- HOME -->
+  <section id="home" class="hero">
+    <h1 class="hero__title">{{ profile.name }} — <span>{{ profile.role }}</span></h1>
+    <p class="hero__tagline">{{ profile.tagline }}</p>
+    <div class="hero__meta">
+      <a href="#work" class="primary">View Work</a>
+      <a href="#resume">Resume</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="fade-in">
+    <div class="section-head">
+      <h2>About</h2>
+      <p class="eyebrow">01</p>
+    </div>
+    <div class="about__grid">
+      <div class="about__bio">
+        {% for para in about.paragraphs %}
+        <p>{{ para }}</p>
+        {% endfor %}
+      </div>
+      <dl class="about__facts">
+        {% for label, value in about.facts %}
+        <dl><dt>{{ label }}</dt><dd>{{ value }}</dd></dl>
+        {% endfor %}
+      </dl>
+    </div>
+  </section>
+
+  <!-- WORK — rendered server-side from PROJECTS in app.py -->
+  <section id="work" class="fade-in">
+    <div class="section-head">
+      <h2>Selected Work</h2>
+      <p class="eyebrow">02</p>
+    </div>
+    <div class="work__grid">
+      {% for project in projects %}
+      <article class="work__card" data-link="{{ project.link }}">
+        <span class="work__card-num">{{ '%02d' | format(loop.index) }}</span>
+        <div class="work__card-icon">{% include 'icons/' + project.icon + '.svg' %}</div>
+        <span class="work__card-tag">{{ project.tag }}</span>
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description }}</p>
+        <div class="work__stack">
+          {% for tech in project.stack %}<span>{{ tech }}</span>{% endfor %}
+        </div>
+        <a class="work__link" href="{{ project.link }}" target="_blank" rel="noopener">View project →</a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- RESUME -->
+  <section id="resume" class="fade-in">
+    <div class="section-head">
+      <h2>Resume</h2>
+      <p class="eyebrow">03</p>
+    </div>
+    <div class="resume__box">
+      <div>
+        <h3>Download my resume</h3>
+        <p>PDF, one page — experience, skills, and education.</p>
+      </div>
+      <a class="resume__btn" href="{{ url_for('resume') }}" download>Download PDF ↓</a>
+    </div>
+  </section>
+
+  <!-- SKILLS — rendered server-side from SKILLS in app.py -->
+  <section id="skills" class="fade-in">
+    <div class="section-head">
+      <h2>Skills</h2>
+      <p class="eyebrow">04</p>
+    </div>
+    <div class="skills__bars">
+      {% for group, items in skills.items() %}
+      <div class="skills__col">
+        <p class="eyebrow">{{ group }}</p>
+        {% for skill in items %}
+        <div class="skill-row">
+          <div class="skill-row__head"><span>{{ skill.name }}</span><span class="pct">{{ skill.level }}%</span></div>
+          <div class="skill-row__track" style="--level:{{ skill.level }}%"><div class="skill-row__fill"></div></div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact fade-in">
+    <p class="eyebrow" style="margin-bottom:16px;">05</p>
+    <h2>Got a project?<br><a href="mailto:{{ profile.email }}">Let's talk →</a></h2>
+    <div class="contact__links">
+      <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+      <a href="{{ profile.github }}" target="_blank" rel="noopener">GitHub ↗</a>
+      <a href="{{ profile.linkedin }}" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 {{ profile.name }}</span>
+    <span>Built with Flask</span>
+  </footer>
+</main>
+
+<!-- ============================================================
+     AI ASSISTANT — talks to POST /api/chat (Python backend)
+     ============================================================ -->
+<button class="ai-fab" id="aiFab">
+  <span class="dot"></span> Ask my AI
+</button>
+
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-panel__head">
+    <div class="ai-panel__head-info">
+      <div class="ai-panel__head-text">
+        <b>{{ profile.name }}'s AI</b>
+        <span><span class="dot"></span> Online</span>
+      </div>
+    </div>
+    <button class="ai-panel__close" id="aiClose" aria-label="Close chat">✕</button>
+  </div>
+  <div class="ai-panel__body" id="aiBody"></div>
+  <div class="ai-chips" id="aiChips"></div>
+  <form class="ai-panel__form" id="aiForm">
+    <input type="text" id="aiInput" placeholder="Ask about my skills, projects..." autocomplete="off">
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

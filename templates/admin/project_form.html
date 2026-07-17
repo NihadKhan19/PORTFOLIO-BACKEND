@@ -1,0 +1,42 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h1>{{ 'Edit project' if project else 'Add project' }}</h1>
+<p class="subtitle">Fields shown on the project card.</p>
+
+<form class="card" method="post">
+  <div class="row">
+    <div class="field">
+      <label>Title</label>
+      <input type="text" name="title" value="{{ project.title if project else '' }}" required>
+    </div>
+    <div class="field">
+      <label>Tag (shown as a small label)</label>
+      <input type="text" name="tag" value="{{ project.tag if project else '' }}">
+    </div>
+  </div>
+  <div class="field">
+    <label>Description</label>
+    <textarea name="description">{{ project.description if project else '' }}</textarea>
+  </div>
+  <div class="row">
+    <div class="field">
+      <label>Tech stack (comma-separated)</label>
+      <input type="text" name="stack" value="{{ project.stack if project else '' }}" placeholder="Python, Pandas, SQL">
+    </div>
+    <div class="field">
+      <label>Icon</label>
+      <select name="icon">
+        {% for icon in icons %}
+        <option value="{{ icon }}" {{ 'selected' if project and project.icon == icon }}>{{ icon }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="field">
+    <label>Project link</label>
+    <input type="text" name="link" value="{{ project.link if project else '#' }}" placeholder="https://...">
+  </div>
+  <button class="btn" type="submit">{{ 'Save changes' if project else 'Add project' }}</button>
+  <a class="btn btn-outline" href="{{ url_for('admin.projects_list') }}">Cancel</a>
+</form>
+{% endblock %}

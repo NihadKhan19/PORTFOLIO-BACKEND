@@ -1,0 +1,48 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h1>Skills</h1>
+<p class="subtitle">Skill groups and the progress bars shown for each skill.</p>
+
+{% for group, items in data %}
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+    <h2 style="margin-bottom:0;">{{ group.name }}</h2>
+    <form method="post" action="{{ url_for('admin.skill_group_delete', gid=group.id) }}" onsubmit="return confirm('Remove this whole group and its skills?')">
+      <button class="btn-danger" type="submit">Remove group</button>
+    </form>
+  </div>
+
+  {% for s in items %}
+  <div class="list-row">
+    <form class="inline-edit" method="post" action="{{ url_for('admin.skill_edit', sid=s.id) }}">
+      <input type="text" name="name" value="{{ s.name }}" required>
+      <input type="number" name="level" min="0" max="100" value="{{ s.level }}">
+      <span class="hint">%</span>
+      <button class="btn btn-outline btn-sm" type="submit">Save</button>
+    </form>
+    <form method="post" action="{{ url_for('admin.skill_delete', sid=s.id) }}" onsubmit="return confirm('Remove this skill?')">
+      <button class="btn-danger" type="submit">Remove</button>
+    </form>
+  </div>
+  {% else %}
+  <p class="hint">No skills in this group yet.</p>
+  {% endfor %}
+
+  <form class="add-form" method="post" action="{{ url_for('admin.skill_add', gid=group.id) }}">
+    <input type="text" name="name" placeholder="Skill name" required>
+    <input type="number" name="level" min="0" max="100" value="70" style="width:80px;">
+    <button class="btn" type="submit">+ Add skill</button>
+  </form>
+</div>
+{% else %}
+<p class="hint">No skill groups yet — add one below.</p>
+{% endfor %}
+
+<div class="card">
+  <h2>New group</h2>
+  <form class="add-form" method="post" action="{{ url_for('admin.skill_group_add') }}">
+    <input type="text" name="name" placeholder="Group name (e.g. Languages & Analysis)" required style="flex:1;">
+    <button class="btn" type="submit">+ Add group</button>
+  </form>
+</div>
+{% endblock %}

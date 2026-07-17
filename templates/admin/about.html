@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h1>About</h1>
+<p class="subtitle">Bio paragraphs and quick facts shown in the About section.</p>
+
+<div class="card">
+  <h2>Bio paragraphs</h2>
+  {% for p in paragraphs %}
+  <div class="list-row">
+    <form class="inline-edit" method="post" action="{{ url_for('admin.paragraph_edit', pid=p.id) }}">
+      <textarea name="content" style="flex:1; padding:8px 12px; border:1px solid var(--line); border-radius:5px; background:var(--paper); font-family:inherit;">{{ p.content }}</textarea>
+      <button class="btn btn-outline btn-sm" type="submit">Save</button>
+    </form>
+    <form method="post" action="{{ url_for('admin.paragraph_delete', pid=p.id) }}" onsubmit="return confirm('Remove this paragraph?')">
+      <button class="btn-danger" type="submit">Remove</button>
+    </form>
+  </div>
+  {% else %}
+  <p class="hint">No paragraphs yet.</p>
+  {% endfor %}
+
+  <form class="add-form" method="post" action="{{ url_for('admin.paragraph_add') }}">
+    <textarea name="content" placeholder="New paragraph…" style="flex:1;" required></textarea>
+    <button class="btn" type="submit">+ Add paragraph</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Quick facts</h2>
+  {% for f in facts %}
+  <div class="list-row">
+    <form class="inline-edit" method="post" action="{{ url_for('admin.fact_edit', fid=f.id) }}">
+      <input type="text" name="label" value="{{ f.label }}" placeholder="Label" required>
+      <input type="text" name="value" value="{{ f.value }}" placeholder="Value" required>
+      <button class="btn btn-outline btn-sm" type="submit">Save</button>
+    </form>
+    <form method="post" action="{{ url_for('admin.fact_delete', fid=f.id) }}" onsubmit="return confirm('Remove this fact?')">
+      <button class="btn-danger" type="submit">Remove</button>
+    </form>
+  </div>
+  {% else %}
+  <p class="hint">No facts yet.</p>
+  {% endfor %}
+
+  <form class="add-form" method="post" action="{{ url_for('admin.fact_add') }}">
+    <input type="text" name="label" placeholder="Label (e.g. Focus)" required>
+    <input type="text" name="value" placeholder="Value (e.g. Data analysis)" required style="flex:1;">
+    <button class="btn" type="submit">+ Add fact</button>
+  </form>
+</div>
+{% endblock %}
