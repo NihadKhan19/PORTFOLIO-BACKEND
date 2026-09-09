@@ -1,6 +1,6 @@
 """
 Admin panel — login-protected CRUD for everything editable on the site:
-nav links, profile/social links, about text, projects, and skills.
+nav links, profile/social links, about text, projects, and skills..
 
 Visit /admin, log in, and edit. Nothing here touches app.py or the
 templates for the public site again — it's all data in portfolio.db.
